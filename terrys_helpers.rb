@@ -21,7 +21,7 @@ module Terrys_helpers
   end
 
   def check_or_cross(v=nil)
-    cross_or_check(v=nil)
+    cross_or_check(v)
   end
 
   def check_or_blank(v=nil)
@@ -43,7 +43,7 @@ module Terrys_helpers
   end
 
   def cross_or_check(v=nil)
-    if v and v>0
+    if v
       image_tag('check.gif', :alt=>'Yes')
     else
       image_tag('cross.gif', :alt=>'No')
