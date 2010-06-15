@@ -48,7 +48,7 @@ module TttAuth
   def find_user
     if session[:user]
       if User.exists?(session[:user])
-        @loggeduser=User.find(session[:user], :include=>:firm)
+        @loggeduser=User.find(session[:user])
         if @loggeduser.is_admin? or @loggeduser.is_terry?
           @admin=1
         end

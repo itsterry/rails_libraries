@@ -99,12 +99,22 @@ module Terrys_tests
     it 'should always have a '+thing.to_s.downcase.to_s do
       o=@thing
       f=thing.to_s.downcase.to_s
+      fid=f+'_id'
+      fidp=fid+'='
       o.respond_to?(f).should be_true
       if klass
         o.send(f).class.should==klass
       else
         o.send(f).class.should==thing
       end
+      o.send(fidp,1)
+      o.should be_valid
+      o.send(fidp,nil)
+      o.should_not be_valid
+      o.send(fidp,1)
+      o.should be_valid
+      o.send(fidp,999999)
+      o.should_not be_valid
     end
   end
 
