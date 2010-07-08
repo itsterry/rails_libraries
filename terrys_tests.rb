@@ -316,6 +316,10 @@ module Terrys_tests
       pending
     end
 
+    it 'should know if it is a god' do
+      pending
+    end
+
     it 'should know if it is authorized for a controller and an action' do
       pending
     end

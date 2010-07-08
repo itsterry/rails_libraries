@@ -200,7 +200,7 @@ module Terrys_validations
 
   def validate_string_or_default(f=nil,d=nil)
     return if f.blank?
-    if self.send(f) and self.send(f).blank?
+    if self.respond_to?(f) and self.send(f).blank?
       self.send(f+'=',d)
     end
   end
