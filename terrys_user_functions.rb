@@ -9,7 +9,7 @@ module Terrys_user_functions
       return true
     end
     unless roles.empty?
-      unless roles.select{|r| r.god}.empty?
+      unless roles.select{|r| r.admin or r.god}.empty?
         return true
       end
     end
@@ -37,6 +37,18 @@ module Terrys_user_functions
       result=true
     end
     result
+  end
+
+  def is_god?
+    if is_terry?
+      return true
+    end
+    unless roles.empty?
+      unless roles.select{|r| r.god}.empty?
+        return true
+      end
+    end
+    false
   end
 
   def is_terry?

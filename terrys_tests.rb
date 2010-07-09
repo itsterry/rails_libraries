@@ -84,6 +84,12 @@ module Terrys_tests
       end
   end
 
+  def mandatory_polymorphic(thing)
+    it 'should have a valid '+thing do
+      pending
+    end
+  end
+
   def mandatory_string(thing)
     it 'should always have a '+thing do
       o=@thing
@@ -313,16 +319,57 @@ module Terrys_tests
     end
 
     it 'should know if it is an admin' do
-      pending
+      o=@thing
+      f='is_admin?'
+      o.respond_to?(f).should be_true
+      o.roles=[]
+      o.save
+      o.roles.should be_empty
+      o.send(f).should be_false
+      ro=Role.new(:title=>'test admin',:admin=>1)
+      ro.save.should be_true
+      o.roles<<ro
+      o.save
+      o.send(f).should be_true
     end
 
     it 'should know if it is a god' do
-      pending
+      o=@thing
+      f='is_god?'
+      o.respond_to?(f).should be_true
+      o.roles=[]
+      o.save
+      o.roles.should be_empty
+      o.send(f).should be_false
+      ro=Role.new(:title=>'test god',:god=>1)
+      ro.save.should be_true
+      o.roles<<ro
+      o.save
+      o.send(f).should be_true
     end
 
     it 'should know if it is authorized for a controller and an action' do
-      pending
-    end
+     o=@thing
+      f='is_authorized?'
+      c='testcontroller'
+      a='testaction'
+      o.respond_to?(f).should be_true
+      o.roles=[]
+      o.save
+      o.roles.should be_empty
+      o.is_authorized?(c,a).should be_false
+      ro=Role.new(:title=>'test')
+      ro.save.should be_true
+      o.roles<<ro
+      o.save
+      o.is_authorized?(c,a).should be_false
+      ri=Right.new(:controller=>c,:action=>a)
+      ri.save.should be_true
+      o.is_authorized?(c,a).should be_false
+      ro.rights<<ri
+      ro.save
+      o.is_authorized?(c,a).should be_true
+     end
 
     it 'should know if it is terry' do
       o=@thing
