@@ -1,5 +1,8 @@
 module Terrys_user_functions
 
+  attr_accessor :new_password
+  attr_accessor :confirm_new_password
+
   def full_name
     firstname+' '+lastname
   end
@@ -98,6 +101,21 @@ module Terrys_user_functions
     set_password(pass)
     #self.last_password_reset=Time.now
     save
+  end
+
+  def title
+    firstname+' '+lastname
+  end
+
+  def validate_new_password
+    unless new_password.blank? and confirm_new_password.blank?
+      if new_password==confirm_new_password
+        self.password=new_password
+      else
+        errors.add_to_base('new password does not match confirmation')
+        return false
+      end
+    end
   end
 
   def viewable_roles

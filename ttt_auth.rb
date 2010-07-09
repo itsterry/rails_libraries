@@ -9,7 +9,7 @@ module TttAuth
       session[:user]=nil
       flash[:warning] = "Please sign in first"
       set_intended_destination
-      return redirect_to(signin_auth)
+      return redirect_to(signin_path)
     end
     #if @loggeduser.password_expired?
     #  unless params["controller"]=='account'

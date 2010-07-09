@@ -1,5 +1,30 @@
 module Terrys_tests
 
+  def bounce_unauthenticated_to_signin(m,a)
+    describe 'for unauthenticated users' do
+      describe m+' '+a do
+        it 'should warn and bounce to signin' do
+          self.send(m,a)
+          response.should redirect_to(signin_path)
+        end
+      end
+    end
+  end
+
+  def bounce_non_admin_to_home(m,a)
+    describe 'for authenticated non-admin users' do
+      describe m+' '+a do
+        it 'should warn and bounce to home' do
+          login_well
+          self.send(m,a)
+          response.should redirect_to(home_path)
+        end
+      end
+    end
+  end
+
+
+
   def has_class_id(thing)
     it 'should have a '+thing.to_s.downcase+'_id' do
       @thing.respond_to?(thing.to_s.downcase+'_id').should be_true
@@ -419,6 +444,41 @@ module Terrys_tests
 
     it 'should have viewable roles' do
       pending
+    end
+
+    it 'should respond to a new_password' do
+      o=@thing
+      f='new_password'
+      o.respond_to?(f).should be_true
+    end
+
+    it 'should respond to a confirm_new_password' do
+      o=@thing
+      f='confirm_new_password'
+      o.respond_to?(f).should be_true
+    end
+
+    it 'should be invalid if given a new_password and confirm_new_password which do not match' do
+      o=@thing
+      o.new_password='a'
+      o.confirm_new_password='b'
+      o.should_not be_valid
+    end
+
+    it 'should set its new_password if given a new_password and confirm_new_password which match' do
+      o=@thing
+      User.authenticate(o.email,'a').should be_false
+      o.new_password='a'
+      o.confirm_new_password='a'
+      o.save
+      User.authenticate(o.email,'a').should==o
+    end
+
+    it 'should ignore a blank new_password with a blank new_password confirm' do
+      o=@thing
+      o.new_password=nil
+      o.confirm_new_password=''
+      o.should be_valid
     end
 
 
