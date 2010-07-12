@@ -112,6 +112,19 @@ module Terrys_tests
   def mandatory_polymorphic(thing)
     it 'should have a valid '+thing do
       pending
+      o=@thing
+      o.respond_to?(thing).should be_true
+      type=o.send(thing+'_type')
+      id=thing+'_id'
+      k=eval(type)
+      k.find_by_id(o,send(id)).should_not be_nil
+      o.should be_valid
+      o.send(type+'=',nil)
+      o.should_not be_valid
+      o.send(type+'=',1)
+      o.should_not be_valid
+      o.send(type+'=',999999)
+      o.should_not be_valid
     end
   end
 
