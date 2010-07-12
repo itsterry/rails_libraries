@@ -212,20 +212,30 @@ module Terrys_validations
     end
   end
 
-  def validate_there_must_be_one(f=nil)
+  def validate_there_must_be_one(f=nil, scope_thing=nil)
     return if f.blank?
     unless self.send(f)
-      others=(self.class.find(:all,:conditions=>[f+' is not null']))
+      conditions=['`'+f+'` is not null']
+      if scope_thing and self.send(scope_thing)
+        conditions[0]+=' and '+scope_thing+'=?'
+        conditions<<self.send(scope_thing)
+      end
+      others=(self.class.find(:all,:conditions=>conditions))
       if others.empty?
         self.send(f+'=',1)
       end
     end
   end
   
-  def validate_there_can_be_only_one(f=nil)
+  def validate_there_can_be_only_one(f=nil, scope_thing=nil)
     return if f.blank?
     if self.send(f)
-      others=(self.class.find(:all,:conditions=>[f+' is not null']))-[self]
+      conditions=['`'+f+'` is not null']
+      if scope_thing and self.send(scope_thing)
+        conditions[0]+=' and '+scope_thing+'=?'
+        conditions<<self.send(scope_thing)
+      end
+      others=(self.class.find(:all,:conditions=>conditions))-[self]
       unless others.empty?
         others.each do |o|
           o.send(f+'=',nil)

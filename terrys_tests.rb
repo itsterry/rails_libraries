@@ -82,6 +82,18 @@ module Terrys_tests
     end
   end
 
+  def mandatory_float_or_default(thing,default)
+    it 'should have a '+thing+' defaulting to '+default.to_s do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.respond_to?(f).should be_true
+      o.send(fp,nil)
+      o.save.should be_true
+      o.send(f).should==default
+    end
+  end
+
   def mandatory_integer(thing)
     it 'should always have a '+thing do
       o=@thing
@@ -93,7 +105,19 @@ module Terrys_tests
     end
   end
 
-  def mandatory_float_or_zero(thing)
+  def mandatory_integer_or_default(thing,default)
+    it 'should have a '+thing+' defaulting to '+default.to_s do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.respond_to?(f).should be_true
+      o.send(fp,nil)
+      o.save.should be_true
+      o.send(f).should==default
+    end
+  end
+
+  def mandatory_float_or_zero(thing,default)
       it 'should have a '+thing+', defaulting to 0.0' do
         o=@thing
         f=thing
@@ -296,6 +320,45 @@ module Terrys_tests
         o.save
         o.send(f).should be_nil
       end
+  end
+
+  def unique_boolean(thing, scope_thing=nil)
+    str='should have a unique '+thing
+    if scope_thing
+      str+=' for its scope_thing'
+    end
+    it str do
+      o=@thing
+      f=thing
+      fp=f+'='
+      scope_thing=scope_thing
+      o.send(fp,1)
+      o.save
+      o.send(f).should==1
+      t=o.send(f)
+      c=o.clone
+      c.send(f).should==t
+      c.title='test2'
+      c.save.should be_true
+      c.send(f).should==1
+      o.reload
+      o.send(f).should be_nil
+    end
+  end
+  
+  def unique_string(thing)
+    it 'should have a unique '+thing do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.send(f).should_not be_nil
+      t=o.send(f)
+      c=o.clone
+      c.send(f).should==t
+      c.should_not be_valid
+      c.send(fp,t+t)
+      c.should be_valid
+    end
   end
 
   def acts_as_generic_list
