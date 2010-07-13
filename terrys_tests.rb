@@ -823,9 +823,6 @@ module Terrys_tests
 
   def acts_as_generic_asset
     has_class_id(Asset)
-    mandatory_string('content_type')
-    mandatory_string('filename')
-    mandatory_integer('size')
     optional_integer('width')
     optional_integer('height')
     has_terrys_attachment_functions

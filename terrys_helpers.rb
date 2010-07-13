@@ -168,7 +168,7 @@ module Terrys_helpers
       if specs[:alt]
         specs[:alt]
       else
-        'not found'
+        asset.full_filename
       end
     end
   end
