@@ -58,6 +58,7 @@ module Terrys_validations
       return false
     end
   end
+
   
   def validate_start_time_not_after_finish_time(s,f,message='Start Time cannot be after Finish Time')
     validate_start_date_not_after_finish_date(s,f,message)
@@ -195,6 +196,60 @@ module Terrys_validations
   def validate_positive_integer_greater_than_zero_or_nil(i)
     unless validate_positive_integer_greater_than_zero(i)
       self.send(i+'=',nil)
+    end
+  end
+
+  def validate_start_and_finish(s,f,d=nil)
+    period=100.years
+    if self.send(s)
+      sv=self.send(s)
+    else
+      sv=nil
+    end
+    if self.send(f)
+      fv=self.send(f)
+    else
+      fv=nil
+    end
+    if sv
+      if fv
+        if fv<sv
+          self.send(f+'=',sv)
+        end
+      else
+        if d
+          if sv>Date.today
+            self.send(f+'=',v+period)
+          else
+            self.send(f+'=',Date.today+period)
+          end
+        else
+          if sv>Time.now
+            self.send(f+'=',sv+period)
+          else
+            self.send(f+'=',Time.now+period)
+          end
+        end
+      end
+    else
+      if fv
+        if d
+          if fv>Date.today
+            self.send(s+'=',Date.today)
+          else
+            self.send(s+'=',fv)
+          end
+        else
+          if fv>Time.now
+            self.send(s+'=',Time.now)
+          else
+            self.send(s+'=',fv)
+          end
+        end
+      else
+        self.send(s+'=',Time.now)
+        self.send(f+'=',Time.now+100.years)
+      end
     end
   end
 

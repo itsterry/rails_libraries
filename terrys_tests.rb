@@ -133,25 +133,6 @@ module Terrys_tests
       end
   end
 
-  def mandatory_polymorphic(thing)
-    it 'should have a valid '+thing do
-      pending
-      o=@thing
-      o.respond_to?(thing).should be_true
-      type=o.send(thing+'_type')
-      id=thing+'_id'
-      k=eval(type)
-      k.find_by_id(o,send(id)).should_not be_nil
-      o.should be_valid
-      o.send(type+'=',nil)
-      o.should_not be_valid
-      o.send(type+'=',1)
-      o.should_not be_valid
-      o.send(type+'=',999999)
-      o.should_not be_valid
-    end
-  end
-
   def mandatory_string(thing)
     it 'should always have a '+thing do
       o=@thing
@@ -490,7 +471,14 @@ module Terrys_tests
     end
 
     it 'should login nicely' do
-      pending
+      o=@thing
+      o.current_login=nil
+      o.save
+      o.current_login.should be_nil
+      o.last_login.should be_nil
+      o.login!
+      o.current_login.should_not be_nil
+      o.last_login.should_not be_nil
     end
 
     it 'should refresh its password' do
@@ -516,10 +504,6 @@ module Terrys_tests
       o.save
       User.authenticate('test@test.com','test').should be_false
       User.authenticate('test@test.com','testagain').should==o
-    end
-
-    it 'should have viewable roles' do
-      pending
     end
 
     it 'should respond to a new_password' do
@@ -744,7 +728,7 @@ module Terrys_tests
       o.send(f).should be_true
     end
 
-    it 'should know if it is an quicktime' do
+    it 'should know if it is a quicktime' do
       o=@thing
       f='is_quicktime?'
       o.respond_to?(f).should be_true
@@ -758,7 +742,28 @@ module Terrys_tests
     end
 
     it 'should know if it is a video' do
-      pending
+      o=@thing
+      f='is_video?'
+      o.respond_to?(f).should be_true
+      o.send(f).should be_false
+      o.content_type='whatever/mov'
+      o.send(f).should be_true
+      o.content_type='whatever/xxx'
+      o.send(f).should be_false
+      o.content_type='whatever/mpg'
+      o.send(f).should be_true
+      o.content_type='whatever/xxx'
+      o.send(f).should be_false
+      o.content_type='whatever/mpeg'
+      o.send(f).should be_true
+      o.content_type='whatever/xxx'
+      o.send(f).should be_false
+      o.content_type='whatever/quicktime'
+      o.send(f).should be_true
+      o.content_type='whatever/xxx'
+      o.send(f).should be_false
+      o.content_type='whatever/x-ms-wmv'
+      o.send(f).should be_true
     end
 
     it 'should know if it is a wmv' do
@@ -768,15 +773,6 @@ module Terrys_tests
       o.send(f).should be_false
       o.content_type='whatever/x-ms-wmv'
       o.send(f).should be_true
-    end
-
-    it 'should know its baseurl' do
-      pending
-      o=@thing
-      f='baseurl'
-      o.respond_to?(f).should be_true
-      o.filename='a/b/c/d/whatever.abc'
-      o.send(f).should=='a/b/c/d/'
     end
 
     it 'should know its extension' do
