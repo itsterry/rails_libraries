@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  controller: MyString
+  action: MyString
+
+two:
+  id: 2
+  controller: MyString
+  action: MyString2
