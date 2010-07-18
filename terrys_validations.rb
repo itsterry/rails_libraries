@@ -219,7 +219,7 @@ module Terrys_validations
       else
         if d
           if sv>Date.today
-            self.send(f+'=',v+period)
+            self.send(f+'=',(sv+period).to_date)
           else
             self.send(f+'=',Date.today+period)
           end
@@ -237,7 +237,7 @@ module Terrys_validations
           if fv>Date.today
             self.send(s+'=',Date.today)
           else
-            self.send(s+'=',fv)
+            self.send(s+'=',(fv).to_date)
           end
         else
           if fv>Time.now
@@ -247,8 +247,13 @@ module Terrys_validations
           end
         end
       else
-        self.send(s+'=',Time.now)
-        self.send(f+'=',Time.now+100.years)
+        if d
+          self.send(s+'=',Date.today)
+          self.send(f+'=',Date.today+100.years)
+        else
+          self.send(s+'=',Time.now)
+          self.send(f+'=',Time.now+100.years)
+        end
       end
     end
   end
