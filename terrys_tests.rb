@@ -1,5 +1,16 @@
 module Terrys_tests
 
+  def bounce_unauthenticated_to_home(m,a)
+    describe 'for unauthenticated users' do
+      describe m+' '+a do
+        it 'should warn and bounce to home' do
+          self.send(m,a)
+          response.should redirect_to(home_path)
+        end
+      end
+    end
+  end
+
   def bounce_unauthenticated_to_signin(m,a)
     describe 'for unauthenticated users' do
       describe m+' '+a do
@@ -352,7 +363,6 @@ module Terrys_tests
       f='position'
       fp=f+'='
       o.respond_to?(f).should be_true
-      o.send(f).should_not be_nil
       o.send(fp,nil)
       o.save
       o.send(f).should_not be_nil
