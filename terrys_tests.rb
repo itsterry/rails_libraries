@@ -62,6 +62,25 @@ module Terrys_tests
     end
   end
 
+  def mandatory_boolean(thing)
+    it 'should have '+thing do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.respond_to?(f).should be_true
+      o.send(fp,nil)
+      o.should_not be_valid
+      o.send(fp,1)
+      o.should be_valid
+      o.send(fp,0)
+      o.should_not be_valid
+      o.send(fp,999999)
+      o.should be_valid
+      o.save
+      o.send(f).should==1
+    end
+  end
+
   def mandatory_collection(thing)
     it 'should have '+thing do
       o=@thing
@@ -338,6 +357,21 @@ module Terrys_tests
     end
   end
   
+  def unique_integer(thing)
+    it 'should have a unique '+thing do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.send(f).should_not be_nil
+      t=o.send(f)
+      c=o.clone
+      c.send(f).should==t
+      c.should_not be_valid
+      c.send(fp,t+t)
+      c.should be_valid
+    end
+  end
+
   def unique_string(thing)
     it 'should have a unique '+thing do
       o=@thing

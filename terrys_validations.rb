@@ -121,6 +121,18 @@ module Terrys_validations
     validate_integer_or_default(f=nil,nil)
   end
   
+  def validate_mandatory_boolean(f=nil,m=nil)
+    message=m||(f+' must be set')
+    return if f.blank?
+    if self.send(f) and self.send(f)>0
+      self.send(f+'=',1)
+    else
+      self.send(f+'=',nil)
+      errors.add_to_base(message)
+      return false
+    end
+  end
+
   def validate_only_one_of(a=[])
     if a.empty?
       errors.add_to_base('You are missing something vital')
