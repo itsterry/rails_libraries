@@ -63,6 +63,7 @@ module Terrys_validations
   def validate_start_time_not_after_finish_time(s,f,message='Start Time cannot be after Finish Time')
     validate_start_date_not_after_finish_date(s,f,message)
   end
+
   def validate_email
     if email
       unless email.match(/[^ @]@.*/)
@@ -106,6 +107,14 @@ module Terrys_validations
         unless self.send(thing) and self.send(thing).is_a?(Float)
           self.send(thing+'=',nil)
         end
+      end
+    end
+  end
+
+  def validate_inherit(thing,donor)
+    if respond_to?(thing) and respond_to?(donor)
+      if self.send(donor) and self.send(donor).send(thing) and not self.send(thing)
+        self.send(thing+'=',self.send(donor).send(thing))
       end
     end
   end
