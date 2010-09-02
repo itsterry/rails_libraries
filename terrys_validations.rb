@@ -63,6 +63,7 @@ module Terrys_validations
   def validate_start_time_not_after_finish_time(s,f,message='Start Time cannot be after Finish Time')
     validate_start_date_not_after_finish_date(s,f,message)
   end
+
   def validate_email
     if email
       unless email.match(/[^ @]@.*/)
@@ -110,6 +111,14 @@ module Terrys_validations
     end
   end
 
+  def validate_inherit(thing,donor)
+    if respond_to?(thing) and respond_to?(donor)
+      if self.send(donor) and self.send(donor).send(thing) and not self.send(thing)
+        self.send(thing+'=',self.send(donor).send(thing))
+      end
+    end
+  end
+
   def validate_integer_or_default(f=nil,default=nil)
     return if f.blank?
     if self.send(f).nil?
@@ -121,6 +130,18 @@ module Terrys_validations
     validate_integer_or_default(f=nil,nil)
   end
   
+  def validate_mandatory_boolean(f=nil,m=nil)
+    message=m||(f+' must be set')
+    return if f.blank?
+    if self.send(f) and self.send(f)>0
+      self.send(f+'=',1)
+    else
+      self.send(f+'=',nil)
+      errors.add_to_base(message)
+      return false
+    end
+  end
+
   def validate_only_one_of(a=[])
     if a.empty?
       errors.add_to_base('You are missing something vital')
@@ -219,7 +240,7 @@ module Terrys_validations
       else
         if d
           if sv>Date.today
-            self.send(f+'=',v+period)
+            self.send(f+'=',(sv+period).to_date)
           else
             self.send(f+'=',Date.today+period)
           end
@@ -237,7 +258,7 @@ module Terrys_validations
           if fv>Date.today
             self.send(s+'=',Date.today)
           else
-            self.send(s+'=',fv)
+            self.send(s+'=',(fv).to_date)
           end
         else
           if fv>Time.now
@@ -247,8 +268,13 @@ module Terrys_validations
           end
         end
       else
-        self.send(s+'=',Time.now)
-        self.send(f+'=',Time.now+100.years)
+        if d
+          self.send(s+'=',Date.today)
+          self.send(f+'=',Date.today+100.years)
+        else
+          self.send(s+'=',Time.now)
+          self.send(f+'=',Time.now+100.years)
+        end
       end
     end
   end

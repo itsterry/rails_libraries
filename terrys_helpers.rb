@@ -154,13 +154,13 @@ module Terrys_helpers
   end
 
   def generic_link(asset,thumbnail,specs={})
-    link_to generic_show(asset,thumbnail,specs), asset.authenticated_s3_url(:expires_in=>5.minutes)
+    link_to generic_show(asset,thumbnail,specs), asset.public_filename
   end
 
   def generic_show(asset,thumbnail,specs={})
     if asset
       if asset.is_image?
-        image_tag(asset.authenticated_s3_url(thumbnail,:expires_in=>5.minutes),specs)
+        image_tag(asset.public_filename(thumbnail),specs)
       elsif asset.is_video?
         image_tag('video_icon.gif', specs)
       end
