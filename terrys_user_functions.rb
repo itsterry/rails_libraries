@@ -55,7 +55,7 @@ module Terrys_user_functions
   end
 
   def is_terry?
-    if email and %w{itsterry@gmail.com terry@shuttleworths.net terry@tttinternational.com}.include?(email)
+    if email and ['itsterry@gmail.com','terry@shuttleworths.net','terry@tttinternational.com'].include?(email)
       true
     else
       false

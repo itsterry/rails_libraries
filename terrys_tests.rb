@@ -174,6 +174,18 @@ module Terrys_tests
     end
   end
 
+  def mandatory_string_or_default(thing,default)
+    it 'should have a '+thing+' defaulting to '+default do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.respond_to?(f).should be_true
+      o.send(fp,nil)
+      o.save.should be_true
+      o.send(f).should==default
+    end
+  end
+
   def mandatory_thing(thing,klass=nil)
     it 'should always have a '+thing.to_s.downcase.to_s do
       o=@thing
