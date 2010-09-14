@@ -112,7 +112,8 @@ module Terrys_user_functions
       if new_password==confirm_new_password
         self.password=new_password
       else
-        errors.add_to_base('new password does not match confirmation')
+        errors.add(:new_password,'password does not match confirmation')
+        errors.add(:confirm_new_password,'password does not match confirmation')
         return false
       end
     end
