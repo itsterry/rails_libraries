@@ -62,6 +62,25 @@ module Terrys_tests
     end
   end
 
+  def mandatory_boolean(thing)
+    it 'should have '+thing do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.respond_to?(f).should be_true
+      o.send(fp,nil)
+      o.should_not be_valid
+      o.send(fp,1)
+      o.should be_valid
+      o.send(fp,0)
+      o.should_not be_valid
+      o.send(fp,999999)
+      o.should be_valid
+      o.save
+      o.send(f).should==1
+    end
+  end
+
   def mandatory_collection(thing)
     it 'should have '+thing do
       o=@thing
@@ -155,6 +174,18 @@ module Terrys_tests
     end
   end
 
+  def mandatory_string_or_default(thing,default)
+    it 'should have a '+thing+' defaulting to '+default do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.respond_to?(f).should be_true
+      o.send(fp,nil)
+      o.save.should be_true
+      o.send(f).should==default
+    end
+  end
+
   def mandatory_thing(thing,klass=nil)
     it 'should always have a '+thing.to_s.downcase.to_s do
       o=@thing
@@ -174,6 +205,17 @@ module Terrys_tests
       o.send(fidp,1)
       o.should be_valid
       o.send(fidp,999999)
+      o.should_not be_valid
+    end
+  end
+
+  def mandatory_time(thing)
+    it 'should always have a '+thing do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.respond_to?(f).should be_true
+      o.send(fp,nil)
       o.should_not be_valid
     end
   end
@@ -314,6 +356,23 @@ module Terrys_tests
       end
   end
 
+  def start_time_not_after_finish_time(start,finish)
+    it 'should not have a '+start+' time which is later than its '+finish+' time' do
+      o=@thing
+      o.respond_to?(start).should be_true
+      o.respond_to?(finish).should be_true
+      sp=start+'='
+      fp=finish+'='
+      t=Time.now
+      o.send(sp,t-1.week)
+      o.send(fp,t+1.week)
+      o.should be_valid
+      o.send(sp,t+1.week)
+      o.send(fp,t-1.week)
+      o.should_not be_valid
+    end
+  end
+
   def unique_boolean(thing, scope_thing=nil)
     str='should have a unique '+thing
     if scope_thing
@@ -338,7 +397,7 @@ module Terrys_tests
     end
   end
   
-  def unique_string(thing)
+  def unique_integer(thing)
     it 'should have a unique '+thing do
       o=@thing
       f=thing
@@ -346,6 +405,24 @@ module Terrys_tests
       o.send(f).should_not be_nil
       t=o.send(f)
       c=o.clone
+      c.send(f).should==t
+      c.should_not be_valid
+      c.send(fp,t+t)
+      c.should be_valid
+    end
+  end
+
+  def unique_string(thing,changevals=nil)
+    it 'should have a unique '+thing do
+      o=@thing
+      f=thing
+      fp=f+'='
+      o.send(f).should_not be_nil
+      t=o.send(f)
+      c=o.clone
+      if changevals
+        c.update_attributes(changevals)
+      end
       c.send(f).should==t
       c.should_not be_valid
       c.send(fp,t+t)
