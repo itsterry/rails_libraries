@@ -385,7 +385,7 @@ module Terrys_helpers
   end
 
   def tiny_mce
-    if @tiny_mce
+    if @tiny_mce or @tinymce
       render :partial=>'layouts/tiny_mce'
     end
   end

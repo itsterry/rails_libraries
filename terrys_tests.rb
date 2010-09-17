@@ -1,22 +1,22 @@
 module Terrys_tests
 
-  def bounce_unauthenticated_to_home(m,a)
+  def bounce_unauthenticated_to_home(m,a,hp=home_path)
     describe 'for unauthenticated users' do
       describe m+' '+a do
         it 'should warn and bounce to home' do
           self.send(m,a)
-          response.should redirect_to(home_path)
+          response.should redirect_to(hp)
         end
       end
     end
   end
 
-  def bounce_unauthenticated_to_signin(m,a)
+  def bounce_unauthenticated_to_signin(m,a,sp=signin_path)
     describe 'for unauthenticated users' do
       describe m+' '+a do
         it 'should warn and bounce to signin' do
           self.send(m,a)
-          response.should redirect_to(signin_path)
+          response.should redirect_to(sp)
         end
       end
     end
