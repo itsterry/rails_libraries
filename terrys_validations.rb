@@ -220,8 +220,7 @@ module Terrys_validations
     end
   end
 
-  def validate_start_and_finish(s,f,d=nil)
-    period=100.years
+  def validate_start_and_finish(s,f,d=nil,period=100.years)
     if self.send(s)
       sv=self.send(s)
     else
