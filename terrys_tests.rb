@@ -373,7 +373,7 @@ module Terrys_tests
     end
   end
 
-  def unique_boolean(thing, scope_thing=nil)
+  def unique_boolean(thing, scope_thing=nil, vital_function='title')
     str='should have a unique '+thing
     if scope_thing
       str+=' for its scope_thing'
@@ -389,7 +389,7 @@ module Terrys_tests
       t=o.send(f)
       c=o.clone
       c.send(f).should==t
-      c.title='test2'
+      c.send(vital_function,'test2')
       c.save.should be_true
       c.send(f).should==1
       o.reload
