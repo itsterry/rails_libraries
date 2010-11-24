@@ -111,13 +111,16 @@ module Terrys_helpers
   end
 
   def flash_show
-    if flash[:error]
-      render :partial=>'layouts/flash_error'
-    elsif flash[:warning]
-      render :partial=>'layouts/flash_warning'
-    elsif flash[:notice]
-      render :partial=>'layouts/flash_notice'
+    unless @no_flash
+      if flash[:error]
+        render :partial=>'layouts/flash_error'
+      elsif flash[:warning]
+        render :partial=>'layouts/flash_warning'
+      elsif flash[:notice]
+        render :partial=>'layouts/flash_notice'
+      end
     end
+    flash=nil
   end
 
   def form_row(a=[],rowoptions={:bgcolor=>cycle_rowcolors})
