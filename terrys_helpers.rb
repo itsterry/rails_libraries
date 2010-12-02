@@ -276,9 +276,7 @@ module Terrys_helpers
   end
 
   def nav
-    if @loggeduser
-      render :partial=>'layouts/nav'
-    end
+    render :partial=>'layouts/nav'
   end
 
   def nicedateandtime(t,separator=' - ')

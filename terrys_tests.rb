@@ -323,15 +323,24 @@ module Terrys_tests
     end
   end
 
-  def optional_thing(thing,klass)
-    o=@thing
-    f=thing
-    setter=f+'_id'
-    t=1
-    o.respond_to?(f).should be_true
-    o.send(f).should be_nil
-    o.send(setter,t)
-    o.send(f).class.should==klass
+  def optional_thing(thing,klass=nil)
+    if thing and not klass
+      klass=thing
+      thing=thing.to_s.downcase
+    end
+    it 'should have a valid '+thing+' or not' do
+      o=@thing
+      f=thing
+      setter=f+'_id='
+      t=1
+      o.respond_to?(f).should be_true
+      o.send(setter,0)
+      o.save
+      o.send(f).should be_nil
+      o.send(setter,t)
+      o.save
+      o.send(f).class.should==klass
+    end
   end
 
   def optional_valid_thing_id(thing)
@@ -651,48 +660,6 @@ module Terrys_tests
 
   def valid_thing_id(thing)
     valid_integer(thing)
-  end
-
-  def optional_thing(thing,klass=nil)
-    if thing and not klass
-      klass=thing
-      thing=thing.to_s.downcase
-    end
-    it 'should have a valid '+thing+' or not' do
-      o=@thing
-      f=thing
-      setter=f+'_id='
-      t=1
-      o.respond_to?(f).should be_true
-      o.send(setter,0)
-      o.save
-      o.send(f).should be_nil
-      o.send(setter,t)
-      o.save
-      o.send(f).class.should==klass
-    end
-  end
-
-  def optional_valid_thing_id(thing)
-    it 'should have a valid '+thing+'_id or not' do
-        o=@thing
-        f=thing
-        fp=f+'='
-        t=1
-        o.respond_to?(f).should be_true
-        o.send(fp,t)
-        o.save
-        o.send(f).should==t
-        o.send(fp,0)
-        o.save
-        o.send(f).should be_nil
-        o.send(fp,t)
-        o.save
-        o.send(f).should==t
-        o.send(fp,999999)
-        o.save
-        o.send(f).should be_nil
-      end
   end
 
   def adds_self_to_list
