@@ -368,11 +368,13 @@ module Terrys_validations
     end
   end
   
-  def validate_uploaded_data(ud)
+  def validate_uploaded_data(ud,retain=1)
     unless self.send(ud).blank?
       a=Asset.new(:uploaded_data=>self.send(ud))
       if a.save
-        self.send(ud+'=',nil)
+        unless retain
+          self.send(ud+'=',nil)
+        end
         var_name=ud.gsub(/_uploaded_data/,'')
         self.send(var_name+'_id=',a.asset_id)
       end
